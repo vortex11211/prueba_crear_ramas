@@ -1,3 +1,2 @@
 console.log('hola mundo');
-console.log("Adiós");
-console.log("Nueva Linea")
+console.log("Nueva Linea");
