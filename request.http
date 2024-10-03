@@ -1,5 +1,7 @@
+### Edit PORT number in this line 
+@BASE_URL= http://localhost:3000
 ### Add Contact
-POST http://localhost:3214/contacts
+POST {{BASE_URL}}/contacts
 Content-Type: application/json
 
 {
@@ -11,7 +13,7 @@ Content-Type: application/json
 
 
 ### Add Second Contact
-POST http://localhost:3214/contacts
+POST {{BASE_URL}}/contacts
 Content-Type: application/json
 
 {
@@ -23,11 +25,11 @@ Content-Type: application/json
 
 
 ### Delete Contact
-DELETE http://localhost:3214/contacts/1
+DELETE {{BASE_URL}}/contacts/1
 
 
 ### Update contact Info
-PUT http://localhost:3214/contacts/2
+PUT {{BASE_URL}}/contacts/2
 Content-Type: application/json
 
 {
@@ -39,16 +41,16 @@ Content-Type: application/json
 
 
 ### Mark Favorite Conctact
-PATCH http://localhost:3214/contacts/1/favorites
+PATCH {{BASE_URL}}/contacts/1/favorites
 
 
 ### Recover Contact
-PATCH http://localhost:3214/contacts/1/recover
+PATCH {{BASE_URL}}/contacts/1/recover
 
 
 ### Show Contact List
-GET http://localhost:3214/contacts
+GET {{BASE_URL}}/contacts
 
 
 ### Show Contact by ID
-GET http://localhost:3214/contacts/1
+GET {{BASE_URL}}/contacts/1
