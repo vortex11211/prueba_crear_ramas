@@ -9,7 +9,7 @@ export const getContact = (async(req: any, res: any)=>{
     })
 
     if (!showContact) { 
-        res.status(404).end("Error: Contact not found")
+        res.status(404).end("Contact not found")
     } else {
         res.json(showContact)
     }
@@ -28,23 +28,25 @@ export const getContacts = (async(req: any, res: any)=>{
 });
 
 export const createContact = (async(req: any, res: any)=>{
-    const {name, last_name, email, phone_number}= req.body;
-    const searchContact = await prisma.contact.findFirst({
-        where: {email, deleted: false}
-    });
+    try {
+        const {name, last_name, email, phone_number}= req.body;
+        const searchContact = await prisma.contact.findFirst({
+            where: {email, deleted: false}
+        });
 
-    if (searchContact) return res.status(400).end("Contact already exists")
+        if (searchContact) return res.status(400).end("Contact already exists")
 
-    const newContact = await prisma.contact.create({
-        data:{
-            name, last_name, email, phone_number
-        }
-    });
+        const newContact = await prisma.contact.create({
+            data:{
+             name, last_name, email, phone_number
+            }
+        });
 
-    if (!newContact) {
-        res.status(400).end("Error: Contact info format is not correct")
-    } else {
-        res.json(newContact)    
+        res.json(newContact)  
+
+    } catch (error) {
+        res.status(500);
+        res.end("Error: Invalid format of data")
     }
 });
 
@@ -68,23 +70,25 @@ export const deleteContact = (async(req: any,res: any)=>{
 });
 
 export const uptadeContact = (async(req: any, res: any)=>{
-    const contactId: number = req.params.contactId;
-    const searchDeletedContact = await prisma.contact.findFirst({
-        where: {contactId: Number(contactId), deleted: false}
-    });
+    try {
+        const contactId: number = req.params.contactId;
+        const searchDeletedContact = await prisma.contact.findFirst({
+            where: {contactId: Number(contactId), deleted: false}
+        });
 
-    if (!searchDeletedContact) return res.status(404).end("Contact not found")
+        if (!searchDeletedContact) return res.status(404).end("Contact not found")
 
-    const {name, last_name, email, phone_number} = req.body;
-    const putContact = await prisma.contact.update({
-        where: {contactId : Number(contactId)},
-        data:{name, last_name, email, phone_number}
-    });
+        const {name, last_name, email, phone_number} = req.body;
+        const putContact = await prisma.contact.update({
+            where: {contactId : Number(contactId)},
+            data:{name, last_name, email, phone_number}
+        });
 
-    if (!putContact) {
-        res.status(404).end("Contact not found")
-    } else {
         res.status(200).json(putContact)
+    
+    } catch (error) {
+        res.status(500);
+        res.end("Error: Invalid format of data")
     }
 });
 
