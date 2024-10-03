@@ -37,7 +37,7 @@ Content-Type: application/json
 
 PATCH http://localhost:3214/contacts/2/favorites
 
-### Recover Contact
+### Recover Contact by ID
 
 PATCH http://localhost:3214/contacts/1/recover
 

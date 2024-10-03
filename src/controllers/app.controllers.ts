@@ -66,8 +66,9 @@ export const uptadeContact = (async(req: any, res: any)=>{
         res.status(200).json(putContact)
     }
 });
+//tu version
 
-export const recoverContact = (async (req: any, res: any) => {
+/*export const recoverContact = (async (req: any, res: any) => {
     const contactId = req.params.contactId;
     const recoveredContact = await prisma.contact.update({
         where: {contactId: Number(contactId)},
@@ -80,4 +81,49 @@ export const recoverContact = (async (req: any, res: any) => {
         res.status(200).json("Contact recovered");
     }
     
-});
+});*/
+
+//##############################################
+//version con try y catch
+/*export const recoverContact = async (req: any, res: any, next: any) => {
+    const contactId = req.params.contactId;
+    try {
+        const findContact = await prisma.contact.findUnique({
+            where: { contactId: Number(contactId) },
+        });
+//findUnique nos ayuda a ver si existe o no el contacto
+        if (!findContact) {
+            return res.status(404).json("Contact not found");
+        }
+
+        const recoveredContact = await prisma.contact.update({
+            where: { contactId: Number(contactId) },
+            data: { deleted: false },
+        });
+
+        res.status(200).json("Contact recovered");
+    } catch (error) {
+        next(error); // Pasa el error al middleware de manejo de errores
+    }
+};*/
+//##################################
+//version con envolvente similar a la que viene en el articulo de MVC
+export const recoverContact = async (req: any, res: any, next: any) => {
+    const contactId = req.params.contactId;
+    const findContact = await prisma.contact.findUnique({
+        where: { contactId: Number(contactId) },
+    });
+
+    if (!findContact) {
+        return res.status(404).json("Contact not found");
+    }
+
+    await prisma.contact.update({
+        where: { contactId: Number(contactId) },
+        data: { deleted: false },
+    });
+
+    res.status(200).json("Contact recovered");
+};
+
+
