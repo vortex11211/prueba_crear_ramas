@@ -9,7 +9,7 @@ export const getContact = (async(req: any, res: any)=>{
     })
 
     if (!showContact) { 
- res.status(404).end("Contact not found")
+        res.status(404).end("Error: Contact not found")
     } else {
         res.json(showContact)
     }
@@ -20,8 +20,8 @@ export const getContacts = (async(req: any, res: any)=>{
        where: {deleted:false}
    });
 
-   if (!showContacts) {
-        res.status(404).end("There are no contacts in the list")    
+   if (showContacts.length == 0) {
+        res.status(200).end("Contacts list is empty")    
     } else {
         res.json(showContacts)     
     }
@@ -29,6 +29,12 @@ export const getContacts = (async(req: any, res: any)=>{
 
 export const createContact = (async(req: any, res: any)=>{
     const {name, last_name, email, phone_number}= req.body;
+    const searchContact = await prisma.contact.findFirst({
+        where: {email, deleted: false}
+    });
+
+    if (searchContact) return res.status(400).end("Contact already exists")
+
     const newContact = await prisma.contact.create({
         data:{
             name, last_name, email, phone_number
@@ -44,23 +50,38 @@ export const createContact = (async(req: any, res: any)=>{
 
 export const deleteContact = (async(req: any,res: any)=>{
     const contactId: number = req.params.contactId;
-    const eraseContact= await prisma.contact.update({
-        where:{contactId: Number(contactId)},
-        data:{deleted: true}
+    const showContact = await prisma.contact.findFirst({
+        where: {contactId: Number(contactId)}
     });
 
-    res.status(204).json("Contact deleted")
+    if (!showContact || showContact.deleted == true) {
+        res.status(404).end("Contact not found");
+
+    } else {
+        const eraseContact= await prisma.contact.update({
+            where:{contactId: Number(contactId)},
+            data:{deleted: true}
+        });
+    
+        res.status(200).json("Contact deleted") ;
+    }
 });
 
 export const uptadeContact = (async(req: any, res: any)=>{
     const contactId: number = req.params.contactId;
+    const searchDeletedContact = await prisma.contact.findFirst({
+        where: {contactId: Number(contactId), deleted: false}
+    });
+
+    if (!searchDeletedContact) return res.status(404).end("Contact not found")
+
     const {name, last_name, email, phone_number} = req.body;
     const putContact = await prisma.contact.update({
         where: {contactId : Number(contactId)},
         data:{name, last_name, email, phone_number}
     });
 
-    if(!putContact) {
+    if (!putContact) {
         res.status(404).end("Contact not found")
     } else {
         res.status(200).json(putContact)
@@ -69,15 +90,48 @@ export const uptadeContact = (async(req: any, res: any)=>{
 
 export const recoverContact = (async (req: any, res: any) => {
     const contactId = req.params.contactId;
+    const searchDeletedContact = await prisma.contact.findFirst({
+        where: {contactId: Number(contactId), deleted: true}
+    });
+
+    if (!searchDeletedContact) return res.status(404).end("Contact not found")
+
+    const searchContact = await prisma.contact.findFirst({
+        where: {email: searchDeletedContact?.email, deleted: false}
+    })
+
+    if (searchContact) return res.status(400).end("Contact already exists with another contactId")
+    
     const recoveredContact = await prisma.contact.update({
         where: {contactId: Number(contactId)},
         data: { deleted: false },
     });
 
-    if(!recoveredContact) {
-        res.status(404).end("Contact not found");
-    } else {
-        res.status(200).json("Contact recovered");
-    }
-    
+    res.status(200).json("Contact recovered"); 
 });
+
+export const favoriteContact = (async (req: any, res: any) => {
+    const contactId = req.params.contactId;
+    const showContact = await prisma.contact.findFirst({
+        where: {contactId: Number(contactId), deleted: false}
+    });
+
+    if(!showContact) return res.status(404).end("Contact not found");
+
+    if (showContact?.favorite == false) {
+        const favContact = await prisma.contact.update({
+            where: {contactId: Number(contactId)},
+            data: { favorite: true },
+        });
+
+        res.status(200).json("Contact is favorite now")
+
+    } else {
+        const noFavContact = await prisma.contact.update({
+            where: {contactId: Number(contactId)},
+            data: { favorite: false },
+        });
+
+        res.status(200).json("Contact is no longer a favorite")
+    }
+})

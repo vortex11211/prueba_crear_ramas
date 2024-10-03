@@ -4,46 +4,51 @@ Content-Type: application/json
 
 {
     "name": "Samantha",
-    "last_name":"Doe",
-    "email":"sam_doe@gmail.com",
-    "phone_number":600000021
+    "last_name": "Doe",
+    "email": "sam_doe@gmail.com",
+    "phone_number": 600000021
 }
+
+
 ### Add Second Contact
 POST http://localhost:3214/contacts
 Content-Type: application/json
 
 {
     "name": "Jhon",
-    "last_name":"Doe",
-    "email":"jon_doe@gmail.com",
-    "phone_number":600000000
+    "last_name": "Doe",
+    "email": "jon_doe@gmail.com",
+    "phone_number": 600000000
 }
+
+
 ### Delete Contact
 DELETE http://localhost:3214/contacts/1
 
-### Update contact Info
 
+### Update contact Info
 PUT http://localhost:3214/contacts/2
 Content-Type: application/json
 
 {
     "name": "Jhon",
-    "last_name":"Doe edited",
-    "email":"jon_doe@gmail.com",
-    "phone_number":600000000
+    "last_name": "Doe edited",
+    "email": "jon_doe@gmail.com",
+    "phone_number": "600000000"
 }
 
-### Mark Favorite Conctact
 
-PATCH http://localhost:3214/contacts/2/favorites
+### Mark Favorite Conctact
+PATCH http://localhost:3214/contacts/1/favorites
+
 
 ### Recover Contact
-
 PATCH http://localhost:3214/contacts/1/recover
+
 
 ### Show Contact List
 GET http://localhost:3214/contacts
 
-### Show Contact by ID
 
+### Show Contact by ID
 GET http://localhost:3214/contacts/1
