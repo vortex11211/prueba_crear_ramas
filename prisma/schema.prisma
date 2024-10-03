@@ -13,12 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Contact{
   contactId Int @id @default(autoincrement())
   name String @db.VarChar(255)
   last_name String @db.VarChar(255)
   email String @db.VarChar(255)
-  phone_number String @db.VarChar(255)
+  phone_number Int 
+  favorite Boolean @default(false) 
   deleted Boolean @default(false)
 }

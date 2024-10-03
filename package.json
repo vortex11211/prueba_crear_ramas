@@ -1,19 +1,26 @@
 {
-  "name": "sprint4",
+  "name": "e41-solo",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "nodemon": "nodemon ./dist/app.js"
   },
   "keywords": [],
-  "author": "Blanco, Jaume - Hernandez, Rene",
+  "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
-    "express": "^4.21.0",
-        "prisma": "^5.20.0"
-  },
   "dependencies": {
-    "@prisma/client": "^5.20.0"
+    "@prisma/client": "^5.20.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.13",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "prisma": "^5.20.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.2"
   }
 }

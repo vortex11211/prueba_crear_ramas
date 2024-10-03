@@ -1,2 +1,1 @@
-## Provemos crear ramas
-modificación de la rama feature
+## Estructura base para trabajar
